@@ -12,10 +12,12 @@ class Node(object):
 
 class Block(object):
     moved = False
+    path = []
 
-    def __init__(self, x, y, x_area, y_area, id):
+    def __init__(self, x, y, x_area, y_area, id, type):
         self.rect = pygame.Rect(x, y, x_area, y_area)
         self.id = id
+        self.type = type
     def move(self, x, y):
         collision_walls = self.rect.move(x,y).collidelist(walls)
         collision_rects = self.rect.move(x,y).collidelist([e.rect for e in blocks if e is not self])
@@ -48,30 +50,51 @@ done = False
 # Used to manage how fast the screen updates
 clock = pygame.time.Clock()
 
-
-block1 = Block(20, 20, 150, 300, "block1")
-block2 = Block(470, 20, 150, 300, "block2")
-block3 = Block(20, 320, 150, 300, "block3")
-block4 = Block(470, 320, 150, 300, "block4")
-block5 = Block(170, 320, 300, 150, "block5")
-smallblock1 = Block(20, 620, 150, 150, "smallblock1")
-smallblock2 = Block(170, 470, 150, 150, "smallblock2")
-smallblock3 = Block(320, 470, 150, 150, "smallblock3")
-smallblock4 = Block(470, 620, 150, 150, "smallblock4")
-center_block = Block(170, 20, 300, 300, "center_block")
+block1 = Block(20, 20, 150, 300, "block1", "vert_block")
+block2 = Block(470, 20, 150, 300, "block2", "vert_block")
+block3 = Block(20, 320, 150, 300, "block3", "vert_block")
+block4 = Block(470, 320, 150, 300, "block4", "vert_block")
+block5 = Block(170, 320, 300, 150, "block5", "vert_block")
+smallblock1 = Block(20, 620, 150, 150, "smallblock1", "small_block")
+smallblock2 = Block(170, 470, 150, 150, "smallblock2", "small_block")
+smallblock3 = Block(320, 470, 150, 150, "smallblock3", "small_block")
+smallblock4 = Block(470, 620, 150, 150, "smallblock4", "small_block")
+center_block = Block(170, 20, 300, 300, "center_block", "center_block")
 
 
 walls = [pygame.Rect(0, 0, 20, 770), pygame.Rect(0, 0, 620, 20), pygame.Rect(620, 0, 20, 770), pygame.Rect(0, 770, 770, 20)]
 blocks = [block1, block2, block3, block4, block5, smallblock1, smallblock2, smallblock3, smallblock4, center_block]
 
+small_block_matrix = [Node(20, 20, 150, 150, 'a'), Node(170, 20, 150, 150, 'b'), Node(320, 20, 150, 150, 'c'),
+                      Node(470, 20, 150, 150, 'd'),
+                      Node(20, 170, 150, 150, 'e'), Node(170, 170, 150, 150, 'f'), Node(320, 170, 150, 150, 'g'),
+                      Node(470, 170, 150, 150, 'h'),
+                      Node(20, 320, 150, 150, 'i'), Node(170, 320, 150, 150, 'j'), Node(320, 320, 150, 150, 'k'),
+                      Node(470, 320, 150, 150, 'l'),
+                      Node(20, 470, 150, 150, 'm'), Node(170, 470, 150, 150, 'n'), Node(320, 470, 150, 150, 'o'),
+                      Node(470, 470, 150, 150, 'p'),
+                      Node(20, 620, 150, 150, 'q'), Node(170, 620, 150, 150, 'r'), Node(320, 620, 150, 150, 's'),
+                      Node(470, 620, 150, 150, 't')]
 
+center_block_matrix = [Node(20, 20, 300, 300, 'a'), Node(170, 20, 300, 300, 'b'), Node(320, 20, 300, 300, 'c'),
+                       Node(20, 170, 300, 300, 'd'), Node(170, 170, 300, 300, 'c'), Node(320, 170, 300, 300, 'e'),
+                       Node(20, 320, 300, 300, 'f'), Node(170, 320, 300, 300, 'g'), Node(320, 320, 300, 300, 'h'),
+                       Node(20, 470, 300, 300, 'i'), Node(170, 470, 300, 300, 'j'), Node(320, 470, 300, 300, 'k')]
 
+vert_block_matrix = [Node(20, 20, 150, 300, 'a'), Node(170, 20, 150, 300, 'b'), Node(320, 20, 150, 300, 'c'),
+                     Node(470, 20, 150, 300, 'd'),
+                     Node(20, 170, 150, 300, 'e'), Node(170, 170, 150, 300, 'f'), Node(320, 170, 150, 300, 'g'),
+                     Node(470, 170, 150, 300, 'h'),
+                     Node(20, 320, 150, 300, 'i'), Node(170, 320, 150, 300, 'j'), Node(320, 320, 150, 300, 'k'),
+                     Node(470, 320, 150, 300, 'l'),
+                     Node(20, 470, 150, 300, 'm'), Node(170, 470, 150, 300, 'n'), Node(320, 470, 150, 300, 'o'),
+                     Node(470, 470, 150, 300, 'p')]
 
-matrix = [Node(20, 20, 150, 150, 'a'), Node(170, 20, 150, 150, 'b'), Node(320, 20, 150, 150, 'c'), Node(470, 20, 150, 150, 'd'),
-          Node(20, 170, 150, 150, 'e'), Node(170, 170, 150, 150, 'f'), Node(320, 170, 150, 150, 'g'), Node(470, 170, 150, 150, 'h'),
-          Node(20, 320, 150, 150, 'i'), Node(170, 320, 150, 150, 'j'), Node(320, 320, 150, 150, 'k'), Node(470, 320, 150, 150, 'l'),
-          Node(20, 470, 150, 150, 'm'), Node(170, 470, 150, 150, 'n'), Node(320, 470, 150, 150, 'o'), Node(470, 470, 150, 150, 'p'),
-          Node(20, 620, 150, 150, 'q'), Node(170, 620, 150, 150, 'r'), Node(320, 620, 150, 150, 's'), Node(470, 620, 150, 150, 't')]
+horz_block_matrix = [Node(20, 20, 300, 150, 'a'), Node(170, 20, 300, 150, 'b'), Node(320, 20, 300, 150, 'c'),
+                     Node(20, 170, 300, 150, 'd'), Node(170, 170, 300, 150, 'c'), Node(320, 170, 300, 150, 'e'),
+                     Node(20, 320, 300, 150, 'f'), Node(170, 320, 300, 150, 'g'), Node(320, 320, 300, 150, 'h'),
+                     Node(20, 470, 300, 150, 'i'), Node(170, 470, 300, 150, 'j'), Node(320, 470, 300, 150, 'k'),
+                     Node(20, 620, 300, 150, 'l'), Node(170, 620, 300, 150, 'm'), Node(320, 620, 300, 150, 'n')]
 
 def select_block(mouse_pos, blocks):
     mouse_x = mouse_pos[0]
@@ -84,11 +107,6 @@ def select_block(mouse_pos, blocks):
 selected_block = 0
 
 def find_adj_nodes(block, matrix):
-    small_blocks = blocks[5:9]
-    vert_blocks = blocks[0:4]
-    large_block = blocks[9]
-    horz_block = blocks[4]
-
     adjacent = []
     block_center_coord_x = block.rect.center[0]
     block_center_coord_y = block.rect.center[1]
@@ -127,24 +145,39 @@ def find_adj_nodes(block, matrix):
                 adjacent.append(e)
     return adjacent
 
-# def solve_klotski():
-#
-#     for e in blocks:
-#         adj_list = [n for n in find_adj_nodes(e, matrix) if n.id not in find_adj_nodes(e, matrix)]
-#         if len(adj_list) == 0:
-#
-#         print("..................")
-#         print(e.id)
-#         print(e.moved)
-#         if e.moved == True:
-#             break
-#         else:
-#             e.move(150, 0)
-#             e.move(0, -150)
-#             e.move(0, 150)
-#             e.move(-150, 0)
 
-
+def solve_klotski(blocks):
+    for e in blocks:
+        if e.type == "small_block":
+            e.move(0, 150)
+            if e.moved:
+                for s in small_block_matrix:
+                    if s.rect.center == e.rect.center:
+                        s.visited = True
+                        e.moved = False
+                        e.path.append(s.id)
+            e.move(150, 0)
+            if e.moved:
+                for s in small_block_matrix:
+                    if s.rect.center == e.rect.center:
+                        s.visited = True
+                        e.moved = False
+                        e.path.append(s.id)
+            e.move(0, -150)
+            if e.moved:
+                for s in small_block_matrix:
+                    if s.rect.center == e.rect.center:
+                        s.visited = True
+                        e.moved = False
+                        e.path.append(s.id)
+            e.move(-150, 0)
+            if e.moved:
+                for s in small_block_matrix:
+                    if s.rect.center == e.rect.center:
+                        s.visited = True
+                        e.moved = False
+                        e.path.append(s.id)
+    print([p.path for p in blocks])
 
 
 
@@ -154,7 +187,7 @@ while not done:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             done = True
-        #solve_klotski()
+        # solve_klotski(blocks)
         screen.fill(black)
         for e in walls:
             pygame.draw.rect(screen, white, e)
