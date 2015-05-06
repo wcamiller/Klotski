@@ -180,55 +180,29 @@ def solve_klotski(blocks):
     print([p.path for p in blocks])
 
 
-
-
-while not done:
-
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            done = True
-        # solve_klotski(blocks)
-        screen.fill(black)
-        for e in walls:
-            pygame.draw.rect(screen, white, e)
-        pygame.draw.rect(screen, black, pygame.Rect(170, 770, 300, 20))
-        pygame.draw.rect(screen, red, block1.rect)
-        pygame.draw.rect(screen, orchid, block2.rect)
-        pygame.draw.rect(screen, paleviolet, block3.rect)
-        pygame.draw.rect(screen, green, center_block.rect)
-        pygame.draw.rect(screen, seashell, block4.rect)
-        pygame.draw.rect(screen, tomato, block5.rect)
-        pygame.draw.rect(screen, greenyellow, smallblock1.rect)
-        pygame.draw.rect(screen, maroon, smallblock2.rect)
-        pygame.draw.rect(screen, darkblue, smallblock3.rect)
-        pygame.draw.rect(screen, lavender, smallblock4.rect)
-        pygame.display.flip()
-    clock.tick(60)
-pygame.quit()
-
-
-
-
+def draw_screen():
+    screen.fill(black)
+    for e in walls:
+        pygame.draw.rect(screen, white, e)
+    pygame.draw.rect(screen, black, pygame.Rect(170, 770, 300, 20))
+    pygame.draw.rect(screen, red, block1.rect)
+    pygame.draw.rect(screen, orchid, block2.rect)
+    pygame.draw.rect(screen, paleviolet, block3.rect)
+    pygame.draw.rect(screen, green, center_block.rect)
+    pygame.draw.rect(screen, seashell, block4.rect)
+    pygame.draw.rect(screen, tomato, block5.rect)
+    pygame.draw.rect(screen, greenyellow, smallblock1.rect)
+    pygame.draw.rect(screen, maroon, smallblock2.rect)
+    pygame.draw.rect(screen, darkblue, smallblock3.rect)
+    pygame.draw.rect(screen, lavender, smallblock4.rect)
+    pygame.display.flip()
 
 # while not done:
 #
-#     for event in pygame.event.get():
+# for event in pygame.event.get():
 #         if event.type == pygame.QUIT:
 #             done = True
-#         elif pygame.mouse.get_pressed()[0]:
-#             selected_block = select_block(pygame.mouse.get_pos(), blocks)
-#         elif selected_block and pygame.mouse.get_pos()[1] > selected_block.rect.bottom:
-#             selected_block.move(0, 150)
-#             selected_block = 0
-#         elif selected_block and pygame.mouse.get_pos()[1] < selected_block.rect.top:
-#             selected_block.move(0, -150)
-#             selected_block = 0
-#         elif selected_block and pygame.mouse.get_pos()[0] > selected_block.rect.right:
-#             selected_block.move(150, 0)
-#             selected_block = 0
-#         elif selected_block and pygame.mouse.get_pos()[0] < selected_block.rect.left:
-#             selected_block.move(-150, 0)
-#             selected_block = 0
+#         # solve_klotski(blocks)
 #         screen.fill(black)
 #         for e in walls:
 #             pygame.draw.rect(screen, white, e)
@@ -246,3 +220,33 @@ pygame.quit()
 #         pygame.display.flip()
 #     clock.tick(60)
 # pygame.quit()
+
+
+
+
+
+while not done:
+
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            done = True
+        elif pygame.mouse.get_pressed()[0]:
+            selected_block = select_block(pygame.mouse.get_pos(), blocks)
+            print(selected_block.id)
+            while not pygame.MOUSEBUTTONUP:
+                if selected_block and pygame.mouse.get_pos()[1] > selected_block.rect.bottom:
+                    selected_block.move(0, pygame.mouse.get_pos[1] - selected_block.rect.bottom)
+                    selected_block = 0
+                elif selected_block and pygame.mouse.get_pos()[1] < selected_block.rect.top:
+                    selected_block.move(0, -150)
+                    selected_block = 0
+                elif selected_block and pygame.mouse.get_pos()[0] > selected_block.rect.right:
+                    selected_block.move(150, 0)
+                    selected_block = 0
+                elif selected_block and pygame.mouse.get_pos()[0] < selected_block.rect.left:
+                    selected_block.move(-150, 0)
+                    selected_block = 0
+                draw_screen()
+        draw_screen()
+    clock.tick(60)
+pygame.quit()
