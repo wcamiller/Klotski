@@ -13,6 +13,9 @@ class Node(object):
 class Block(object):
     moved = False
     path = []
+    displace_x = 0
+    displace_y = 0
+
 
     def __init__(self, x, y, x_area, y_area, id, type):
         self.rect = pygame.Rect(x, y, x_area, y_area)
@@ -24,6 +27,8 @@ class Block(object):
         if collision_walls < 0 and collision_rects < 0:
             self.rect = self.rect.move(x,y)
             self.moved = True
+            self.displace_x += x
+            self.displace_y += y
 
     def simple_move(self, x, y):
         self.rect.move(x, y)
@@ -43,12 +48,16 @@ tomato = (255, 99, 71)
 
 size = (640, 790)
 screen = pygame.display.set_mode(size)
+pygame.display.set_caption('Klotski')
 
 # Loop until the user clicks the close button.
 done = False
 
 # Used to manage how fast the screen updates
 clock = pygame.time.Clock()
+
+# Keeps track of moves made
+moveCount = 0
 
 block1 = Block(20, 20, 150, 300, "block1", "vert_block")
 block2 = Block(470, 20, 150, 300, "block2", "vert_block")
@@ -222,31 +231,47 @@ def draw_screen():
 # pygame.quit()
 
 
+mouseHeldDown = False
+blockMove = (0, 0)
 
+tmp_x = 0
+tmp_y = 0
 
+# Decides when to shift block
+threshold = 75
 
 while not done:
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             done = True
-        elif pygame.mouse.get_pressed()[0]:
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            mouseHeldDown = True
             selected_block = select_block(pygame.mouse.get_pos(), blocks)
-            print(selected_block.id)
-            while not pygame.MOUSEBUTTONUP:
-                if selected_block and pygame.mouse.get_pos()[1] > selected_block.rect.bottom:
-                    selected_block.move(0, pygame.mouse.get_pos[1] - selected_block.rect.bottom)
-                    selected_block = 0
-                elif selected_block and pygame.mouse.get_pos()[1] < selected_block.rect.top:
-                    selected_block.move(0, -150)
-                    selected_block = 0
-                elif selected_block and pygame.mouse.get_pos()[0] > selected_block.rect.right:
-                    selected_block.move(150, 0)
-                    selected_block = 0
-                elif selected_block and pygame.mouse.get_pos()[0] < selected_block.rect.left:
-                    selected_block.move(-150, 0)
-                    selected_block = 0
-                draw_screen()
+            pygame.mouse.get_rel()
+        elif event.type == pygame.MOUSEBUTTONUP:
+            mouseHeldDown = False
+            moveCount += 1
+
+            if selected_block in blocks:
+                tmp_x = selected_block.displace_x % 150
+                if tmp_x > threshold:
+                    selected_block.move(150 - tmp_x, 0)
+                else:
+                    selected_block.move(-tmp_x, 0)
+
+                tmp_y = selected_block.displace_y % 150
+                if tmp_y > threshold:
+                    selected_block.move(0, 150 - tmp_y)
+                else:
+                    selected_block.move(0, -tmp_y)
+            selected_block = 0
+        elif mouseHeldDown:
+            blockMove = pygame.mouse.get_rel()
+            if selected_block in blocks:
+                selected_block.move(blockMove[0], 0)
+                selected_block.move(0, blockMove[1])
+
         draw_screen()
     clock.tick(60)
 pygame.quit()
